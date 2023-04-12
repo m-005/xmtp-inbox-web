@@ -1,4 +1,5 @@
 import "../styles/globals.css";
+import "@xmtp/react-sdk/style.css";
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import "@rainbow-me/rainbowkit/styles.css";
@@ -12,6 +13,7 @@ import { Wallet } from "ethers/lib";
 import React, { useEffect, useState } from "react";
 import { isAppEnvDemo } from "../helpers";
 import "../i18n";
+import { XMTPProvider } from "@xmtp/react-sdk";
 
 const AppWithoutSSR = dynamic(() => import("../components/App"), {
   ssr: false,
@@ -54,9 +56,11 @@ function AppWrapper({ Component, pageProps }: AppProps) {
     <WagmiConfig client={wagmiClient}>
       <RainbowKitProvider chains={chains}>
         <React.StrictMode>
-          <AppWithoutSSR>
-            <Component {...pageProps} />
-          </AppWithoutSSR>
+          <XMTPProvider>
+            <AppWithoutSSR>
+              <Component {...pageProps} />
+            </AppWithoutSSR>
+          </XMTPProvider>
         </React.StrictMode>
       </RainbowKitProvider>
     </WagmiConfig>

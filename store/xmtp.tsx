@@ -9,7 +9,7 @@ interface XmtpState {
   setConversations: (conversations: Map<string, Conversation>) => void;
   loadingConversations: boolean;
   setLoadingConversations: (loadingConversations: boolean) => void;
-  convoMessages: Map<string, DecodedMessage[]>;
+  convoMessages: Map<string, Map<string, DecodedMessage>>;
   previewMessages: Map<string, DecodedMessage>;
   setPreviewMessage: (key: string, message: DecodedMessage) => void;
   setPreviewMessages: (previewMessages: Map<string, DecodedMessage>) => void;
@@ -47,9 +47,10 @@ export const useXmtpStore = create<XmtpState>((set) => ({
     let numAdded = 0;
     set((state) => {
       const convoMessages = new Map(state.convoMessages);
-      const existing = state.convoMessages.get(key) || [];
-      const updated = getUniqueMessages([...existing, ...newMessages]);
-      numAdded = updated.length - existing.length;
+      const existing = state.convoMessages.get(key) ?? new Map();
+
+      const updated = getUniqueMessages(existing, newMessages);
+      numAdded = updated.size - existing.size;
       // If nothing has been added, return the old item to avoid unnecessary refresh
       if (!numAdded) {
         return { convoMessages: state.convoMessages };

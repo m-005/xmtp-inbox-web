@@ -14,9 +14,10 @@ interface FullMessageWrapperProps {
     sent: Date;
   };
   idx: number;
+  type: "sent" | "pending" | "failed";
 }
 
-export const FullMessageWrapper = ({ msg, idx }: FullMessageWrapperProps) => {
+export const FullMessageWrapper = ({ msg, type }: FullMessageWrapperProps) => {
   const { client } = useClient();
 
   // Get ENS if exists from full address
@@ -27,8 +28,9 @@ export const FullMessageWrapper = ({ msg, idx }: FullMessageWrapperProps) => {
 
   return (
     <FullMessage
+      type={type}
       text={<MessageContentWrapper content={msg.content} />}
-      key={`${msg.id}_${idx}`}
+      key={msg.id}
       from={{
         displayAddress: ensName ?? shortAddress(msg.senderAddress),
         isSelf: client?.address === msg.senderAddress,

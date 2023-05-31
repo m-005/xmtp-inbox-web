@@ -36,7 +36,7 @@ const useGetMessages = (conversationId: string) => {
   );
 
   return {
-    messages,
+    messages: messages ?? new Map<string, DecodedMessage>(),
     next,
     hasMore,
     isLoading,

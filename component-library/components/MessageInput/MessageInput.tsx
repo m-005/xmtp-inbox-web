@@ -3,6 +3,7 @@ import { ArrowUpIcon } from "@heroicons/react/solid";
 import { IconButton } from "../IconButton/IconButton";
 import { classNames } from "../../../helpers";
 import { useTranslation } from "react-i18next";
+import { Conversation } from "@xmtp/react-sdk";
 
 interface InputProps {
   /**
@@ -16,13 +17,13 @@ interface InputProps {
   /**
    * Rerender component?
    */
-  conversationId?: string;
+  conversation?: Conversation;
 }
 
 export const MessageInput = ({
   onSubmit,
   isDisabled,
-  conversationId,
+  conversation,
 }: InputProps) => {
   const { t } = useTranslation();
   let textAreaRef = useRef<HTMLTextAreaElement>(null);
@@ -54,7 +55,7 @@ export const MessageInput = ({
   useEffect(() => {
     textAreaRef.current?.focus();
     setValue("");
-  }, [conversationId]);
+  }, [conversation]);
 
   return (
     <form>

@@ -12,8 +12,8 @@ import { Conversation } from "@xmtp/react-sdk";
 const useSendMessage = (conversationId: address) => {
   const conversations = useXmtpStore((state) => state.conversations);
   let selectedConversation = conversations.get(conversationId);
-  const startConversation = useStartConversation();
-  const sendMessageFromHook = useSendMessageHook(
+  const { startConversation } = useStartConversation();
+  const { sendMessage: sendMessageFromHook } = useSendMessageHook(
     selectedConversation as Conversation,
   );
   const recipientWalletAddress = useXmtpStore(

@@ -2,6 +2,8 @@ import React, { ReactElement } from "react";
 import { DateDivider } from "../DateDivider/DateDivider";
 import { classNames } from "../../../helpers";
 import { useTranslation } from "react-i18next";
+import { CheckIcon } from "@heroicons/react/solid";
+import { ExclamationIcon, ClockIcon } from "@heroicons/react/outline";
 
 interface MessageSender {
   displayAddress: string;
@@ -25,15 +27,42 @@ interface FullMessageProps {
    * Should we show the date divider?
    */
   showDateDivider?: boolean;
+  type: "sent" | "pending" | "failed";
 }
+
+const MessageIcon: React.FC<Pick<FullMessageProps, "type">> = ({ type }) => {
+  switch (type) {
+    case "failed":
+      return <ExclamationIcon width={12} height={12} />;
+    case "pending":
+      return <ClockIcon width={12} height={12} />;
+    case "sent":
+      return <CheckIcon width={12} height={12} />;
+  }
+};
+
+const MessageStatus: React.FC<Pick<FullMessageProps, "type" | "datetime">> = ({
+  datetime,
+  type,
+}) => {
+  const { t } = useTranslation();
+  switch (type) {
+    case "failed":
+      return <>Not delivered</>;
+    case "pending":
+      return <>Sending</>;
+    case "sent":
+      return <>{t("{{datetime, time}}", { datetime })}</>;
+  }
+};
 
 export const FullMessage = ({
   text,
   from,
   datetime,
   showDateDivider = false,
+  type,
 }: FullMessageProps) => {
-  const { t } = useTranslation();
   const isOutgoingMessage = from.isSelf;
 
   const incomingMessageBackgroundStyles = "bg-gray-200 rounded-br-lg pl-2";
@@ -65,10 +94,11 @@ export const FullMessage = ({
             {text}
           </div>
           <div
-            className={`text-xs text-gray-500 w-full flex mb-4 ${
+            className={`text-xs text-gray-500 w-full flex items-center gap-1 mb-4 ${
               isOutgoingMessage ? "justify-end" : "justify-start"
             }`}>
-            {t("{{datetime, time}}", { datetime })}
+            <MessageIcon type={type} />
+            <MessageStatus datetime={datetime} type={type} />
           </div>
         </div>
       </div>

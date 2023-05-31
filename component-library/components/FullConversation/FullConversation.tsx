@@ -12,7 +12,7 @@ export const FullConversation = ({
   isLoading = false,
 }: FullConversationProps) => {
   const { t } = useTranslation();
-  if (isLoading) {
+  if (isLoading && messages.length === 0) {
     return (
       <div className={"h-full flex flex-col-reverse justify-start p-4"}>
         {Array.from({ length: 3 }).map((_, idx) => (

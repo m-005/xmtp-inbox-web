@@ -1,10 +1,7 @@
 import React, { useEffect } from "react";
 import { useXmtpStore } from "../store/xmtp";
-import { TAILWIND_MD_BREAKPOINT, wipeKeys } from "../helpers";
-import { FullConversationWrapper } from "../wrappers/FullConversationWrapper";
-import { AddressInputWrapper } from "../wrappers/AddressInputWrapper";
+import { TAILWIND_MD_BREAKPOINT, getAddress, wipeKeys } from "../helpers";
 import { HeaderDropdownWrapper } from "../wrappers/HeaderDropdownWrapper";
-import { MessageInputWrapper } from "../wrappers/MessageInputWrapper";
 import { SideNavWrapper } from "../wrappers/SideNavWrapper";
 import { LearnMore } from "../component-library/components/LearnMore/LearnMore";
 import router from "next/router";
@@ -12,6 +9,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import { useClient } from "@xmtp/react-sdk";
 import { useDisconnect, useSigner } from "wagmi";
 import { ConversationListWrapper } from "../wrappers/ConversationListWrapper";
+import MessagesWrapper from "../wrappers/MessagesWrapper";
 
 export type address = "0x${string}";
 
@@ -29,6 +27,8 @@ const Inbox: React.FC<{ children?: React.ReactNode }> = () => {
   // XMTP Store
   const conversations = useXmtpStore((state) => state.conversations);
   const conversationId = useXmtpStore((state) => state.conversationId);
+  const conversation =
+    conversationId !== undefined ? conversations.get(conversationId) : null;
 
   const recipientWalletAddress = useXmtpStore(
     (state) => state.recipientWalletAddress,
@@ -97,15 +97,7 @@ const Inbox: React.FC<{ children?: React.ReactNode }> = () => {
               setStartedFirstMessage={() => setStartedFirstMessage(true)}
             />
           ) : (
-            <>
-              <div className="flex">
-                <AddressInputWrapper />
-              </div>
-              <div className="h-full overflow-auto flex flex-col">
-                {conversationId && <FullConversationWrapper />}
-              </div>
-              <MessageInputWrapper />
-            </>
+            conversation && <MessagesWrapper conversation={conversation} />
           )}
         </div>
       ) : null}

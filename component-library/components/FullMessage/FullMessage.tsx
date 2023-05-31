@@ -43,9 +43,9 @@ const MessageIcon: React.FC<Pick<FullMessageProps, "status">> = ({
         <ExclamationIcon className="text-red-600" width={16} height={16} />
       );
     case "pending":
-      return <ClockIcon width={12} height={12} />;
+      return <ClockIcon width={16} height={16} />;
     case "sent":
-      return <CheckIcon width={12} height={12} />;
+      return <CheckIcon width={16} height={16} />;
   }
 };
 
@@ -64,7 +64,6 @@ const MessageStatus: React.FC<
         </span>
       );
     case "pending":
-      return <span>Sending</span>;
     case "sent":
       return <span>{t("{{datetime, time}}", { datetime })}</span>;
   }

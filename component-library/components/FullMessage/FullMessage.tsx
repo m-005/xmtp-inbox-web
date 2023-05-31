@@ -27,13 +27,21 @@ interface FullMessageProps {
    * Should we show the date divider?
    */
   showDateDivider?: boolean;
-  type: "sent" | "pending" | "failed";
+  /**
+   * Message status
+   */
+  status: "sent" | "pending" | "failed";
+  retry?: () => Promise<void>;
 }
 
-const MessageIcon: React.FC<Pick<FullMessageProps, "type">> = ({ type }) => {
-  switch (type) {
+const MessageIcon: React.FC<Pick<FullMessageProps, "status">> = ({
+  status,
+}) => {
+  switch (status) {
     case "failed":
-      return <ExclamationIcon width={12} height={12} />;
+      return (
+        <ExclamationIcon className="text-red-600" width={16} height={16} />
+      );
     case "pending":
       return <ClockIcon width={12} height={12} />;
     case "sent":
@@ -41,18 +49,24 @@ const MessageIcon: React.FC<Pick<FullMessageProps, "type">> = ({ type }) => {
   }
 };
 
-const MessageStatus: React.FC<Pick<FullMessageProps, "type" | "datetime">> = ({
-  datetime,
-  type,
-}) => {
+const MessageStatus: React.FC<
+  Pick<FullMessageProps, "status" | "datetime" | "retry">
+> = ({ datetime, status, retry }) => {
   const { t } = useTranslation();
-  switch (type) {
+  switch (status) {
     case "failed":
-      return <>Not delivered</>;
+      return (
+        <span className="text-red-600 flex items-center gap-1">
+          Not delivered &bull;
+          <span className="cursor-pointer underline" onClick={retry}>
+            Retry
+          </span>
+        </span>
+      );
     case "pending":
-      return <>Sending</>;
+      return <span>Sending</span>;
     case "sent":
-      return <>{t("{{datetime, time}}", { datetime })}</>;
+      return <span>{t("{{datetime, time}}", { datetime })}</span>;
   }
 };
 
@@ -61,7 +75,8 @@ export const FullMessage = ({
   from,
   datetime,
   showDateDivider = false,
-  type,
+  status,
+  retry,
 }: FullMessageProps) => {
   const isOutgoingMessage = from.isSelf;
 
@@ -97,8 +112,8 @@ export const FullMessage = ({
             className={`text-xs text-gray-500 w-full flex items-center gap-1 mb-4 ${
               isOutgoingMessage ? "justify-end" : "justify-start"
             }`}>
-            <MessageIcon type={type} />
-            <MessageStatus datetime={datetime} type={type} />
+            <MessageIcon status={status} />
+            <MessageStatus datetime={datetime} status={status} retry={retry} />
           </div>
         </div>
       </div>

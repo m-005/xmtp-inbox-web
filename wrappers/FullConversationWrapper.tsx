@@ -47,12 +47,13 @@ export const FullConversationWrapper: React.FC<
         const dateHasChanged = lastMessageDateRef.current
           ? !isOnSameDay(lastMessageDateRef.current, item.sent)
           : false;
+
         const messageDiv = (
           <div key={item.id}>
             {index === allMessagesLength - 1 ? (
               <DateDivider date={item.sent} />
             ) : null}
-            <FullMessageWrapper type={item.type} msg={item} idx={index} />
+            <FullMessageWrapper status={item.status} msg={item} idx={index} />
             {dateHasChanged ? (
               <DateDivider date={lastMessageDateRef.current!} />
             ) : null}
@@ -70,7 +71,7 @@ export const FullConversationWrapper: React.FC<
             {index === allMessagesLength - 1 ? (
               <DateDivider date={msg.sent} />
             ) : null}
-            <FullMessageWrapper type="sent" msg={msg} idx={index} />
+            <FullMessageWrapper status="sent" msg={msg} idx={index} />
             {dateHasChanged ? (
               <DateDivider date={lastMessageDateRef.current!} />
             ) : null}

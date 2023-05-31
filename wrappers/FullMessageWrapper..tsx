@@ -5,6 +5,7 @@ import { isValidLongWalletAddress, shortAddress } from "../helpers";
 import { address } from "../pages/inbox";
 import MessageContentWrapper from "./MessageContentWrapper";
 import { useClient } from "@xmtp/react-sdk";
+import { ms } from "date-fns/locale";
 
 interface FullMessageWrapperProps {
   msg: {
@@ -12,12 +13,16 @@ interface FullMessageWrapperProps {
     senderAddress: string;
     content: string;
     sent: Date;
+    retry?: () => Promise<void>;
   };
   idx: number;
-  type: "sent" | "pending" | "failed";
+  status: "sent" | "pending" | "failed";
 }
 
-export const FullMessageWrapper = ({ msg, type }: FullMessageWrapperProps) => {
+export const FullMessageWrapper = ({
+  msg,
+  status,
+}: FullMessageWrapperProps) => {
   const { client } = useClient();
 
   // Get ENS if exists from full address
@@ -28,7 +33,7 @@ export const FullMessageWrapper = ({ msg, type }: FullMessageWrapperProps) => {
 
   return (
     <FullMessage
-      type={type}
+      status={status}
       text={<MessageContentWrapper content={msg.content} />}
       key={msg.id}
       from={{
@@ -36,6 +41,7 @@ export const FullMessageWrapper = ({ msg, type }: FullMessageWrapperProps) => {
         isSelf: client?.address === msg.senderAddress,
       }}
       datetime={msg.sent}
+      retry={msg.retry}
     />
   );
 };

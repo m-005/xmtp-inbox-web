@@ -2,8 +2,8 @@ import React, { ReactElement } from "react";
 import { DateDivider } from "../DateDivider/DateDivider";
 import { classNames } from "../../../helpers";
 import { useTranslation } from "react-i18next";
-import { CheckIcon } from "@heroicons/react/solid";
-import { ExclamationIcon, ClockIcon } from "@heroicons/react/outline";
+import { CheckIcon, ExclamationIcon } from "@heroicons/react/solid";
+import { ClockIcon } from "@heroicons/react/outline";
 
 interface MessageSender {
   displayAddress: string;
